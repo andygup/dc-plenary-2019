@@ -1,0 +1,24 @@
+{
+  "name": "2017-devsummit-plenary",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "ws -p 80"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@dojo/framework": "^3.0.1",
+    "@types/arcgis-js-api": "^4.9.0",
+    "cldrjs": "^0.5.0",
+    "globalize": "^1.4.0",
+    "maquette": "^3.3.1",
+    "maquette-css-transitions": "^1.1.0",
+    "maquette-jsx": "^2.1.1",
+    "monaco-editor": "^0.8.3",
+    "requirejs": "^2.3.6",
+    "text": "github:requirejs/text",
+    "typescript": "^2.2.1"
+  }
+}

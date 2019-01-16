@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+    <title>Dubai Redevelopment</title>
+
+    <style>
+        html,
+        body,
+        #viewDiv {
+            padding: 0;
+            margin: 0;
+            height: 100%;
+            width: 100%;
+            font-family: "Avenir Next W00", "Helvetica Neue", Helvetica, Arial, sans-serif;
+        }
+
+        #slidesDiv {
+            background-color: white;
+            opacity: 0.9;
+            color: black;
+            padding: 5px 10px 10px 10px;
+            visibility: hidden;
+            text-align: center;
+            height: 68px;
+            bottom: 16px;
+            left: 0;
+            right: 0;
+            position: absolute;
+            overflow-x: scroll;
+            overflow-y: hidden;
+            white-space: nowrap;
+        }
+
+        #slidesDiv .slide {
+            /* Show cursor as pointer when on a slide */
+            cursor: pointer;
+            display: inline-block;
+            padding: 0 5px;
+            margin-top: -15px;
+        }
+
+        #slidesDiv .slide .title {
+            /* Center the title text */
+            text-align: center;
+            position: relative;
+            top: 38px;
+        }
+
+        /* Draw active slide with a nice border around the thumbnail */
+
+        #slidesDiv .slide.active img {
+            box-shadow: 0px 0px 12px black;
+            border-style: solid;
+            border-width: thin;
+            border-color: black;
+        }
+
+        #apptitle {
+            position: absolute;
+            font-size: 1.2em;
+            font-weight: 200;
+            text-align: right;
+            top: 0;
+            right: 0;
+            z-index: 100;
+            padding: 15px;
+            color: white;
+            text-shadow: 1px 1px 1px #846231;
+        }
+    </style>
+
+    <link rel="stylesheet" href="https://js.arcgis.com/4.9/esri/css/main.css">
+    <script src="https://js.arcgis.com/4.9/"></script>
+
+    <script>
+        require([
+            "esri/views/SceneView",
+            "esri/WebScene",
+            "esri/webscene/Slide",
+
+            // Array shim for IE11
+            "@dojo/framework/shim/array"
+        ], function (
+            SceneView, WebScene, Slide, Array
+        ) {
+
+            var scene = new WebScene({
+                portalItem: { // autocasts as new PortalItem()
+                    id: "3712088239a8484a82a46d0e5dde7fde"
+                }
+            });
+
+            var view = new SceneView({
+                map: scene,
+                container: "viewDiv",
+                qualityProfile: "high"
+            });
+
+            view.ui.empty("top-left");
+
+            function createSlideUI(slide, placement) {
+                var slideElement = document.createElement("div");
+                slideElement.id = slide.id;
+                slideElement.classList.add("slide");
+
+                var slidesDiv = document.getElementById("slidesDiv");
+                if (placement === "first") {
+                    slidesDiv.insertBefore(slideElement, slidesDiv.firstChild);
+                } else {
+                    slidesDiv.appendChild(slideElement);
+                }
+
+                var title = document.createElement("div");
+                title.innerText = slide.title.text;
+                title.className = "title";
+                slideElement.appendChild(title);
+
+
+                var img = new Image();
+                // Set the src URL of the image to the thumbnail URL of the slide
+                img.src = slide.thumbnail.url;
+                // Set the title property of the image to the title of the slide
+                img.title = slide.title.text;
+                // Place the image inside the new <div> element
+                slideElement.appendChild(img);
+
+                slideElement.addEventListener("click", function () {
+                    var slides = document.querySelectorAll(".slide");
+                    Array.from(slides).forEach(function (node) {
+                        node.classList.remove("active");
+                    });
+
+                    slideElement.classList.add("active");
+
+                    slide.applyTo(view);
+                });
+            }
+
+            view.when(function () {
+                document.getElementById("slidesDiv").style.visibility = "visible";
+
+                var slides = scene.presentation.slides;
+
+                slides.forEach(createSlideUI);
+
+                // get layers from webscene
+                const projectLayer = scene.layers.filter(function (layer) {
+                    return layer.title === "Project";
+                }).getItemAt(0);
+
+                const buildingsLayer = scene.layers.filter(function (layer) {
+                    return layer.title === "Buildings";
+                }).getItemAt(0);
+
+                const contextLayer = scene.layers.filter(function (layer) {
+                    return layer.title === "Context";
+                }).getItemAt(0);
+
+
+                // change color
+                const colorRend = renderer = {
+                    type: 'simple',
+                    symbol: {
+                        type: 'mesh-3d',
+                        symbolLayers: [{
+                            type: 'fill',
+                            material: {
+                                color: '#efe7d0'
+                            },
+                            edges :{
+                                type: 'solid',
+                                color: [56,56,56,0.7],
+                                size: 0.5,
+                                extensionLength: 0
+                            }
+                        }]
+                    }
+                };
+                Promise.all([buildingsLayer, contextLayer, projectLayer]).then(() => {
+
+                    buildingsLayer.renderer = colorRend;
+                    contextLayer.renderer = colorRend;
+
+
+                    // add edges
+
+                    const renderer = projectLayer.renderer.clone();
+                    const fillSymbolLayer = renderer.symbol.symbolLayers.getItemAt(0);
+
+                    fillSymbolLayer.edges = {
+                        type: 'sketch',
+                        color: "#534026",
+                        size: 1.5,
+                        extensionLength: 2
+                    };
+
+                    projectLayer.renderer = renderer;
+
+                });
+
+
+            });
+
+        });
+    </script>
+</head>
+
+<body>
+    <div id="apptitle">Dubai Redevelopment</div>
+    <div id="viewDiv"></div>
+    <div id="slidesDiv"></div>
+</body>
+
+</html>
