@@ -62,9 +62,9 @@ body,
   font-size: 1.2em;
 }
 
-#codeSnippets {
-  width: 800px;
-}
+/*#codeSnippets {*/
+  /*width: 800px;*/
+/*}*/
 
 .esri-direct-line-measurement-3d {
   font-size: 1.2em;
