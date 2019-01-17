@@ -1,10 +1,12 @@
 define([
     "esri/WebScene",
-    "esri/views/SceneView"
+    "esri/views/SceneView",
+    "esri/core/watchUtils"
   ],
   function (
     WebScene,
-    SceneView
+    SceneView,
+    watchUtils
   ) {
     let webscene, view, buildingsLayer, projectLayer;
 
@@ -40,6 +42,12 @@ define([
         window.view = view;
 
         view.when(function () {
+
+            watchUtils.watch(view, "interacting", function(r) {
+              const c = view.camera.clone();
+              console.log('camera', "position: " + JSON.stringify(c.position) + ", tile: " + c.tilt);
+            });
+
           projectLayer = webscene.layers.filter(function (layer) {
             return layer.title === "Project";
           }).getItemAt(0);
@@ -122,24 +130,24 @@ define([
         //
         /////////////////////////////////////////////////////////////////////////////////
 
-        {
-
-          title: "Add project layer",
-
-          code: `
-  const projectLayer = new SceneLayer({
-    url: "https://.../ProjectBuilding/SceneServer"
-  });
-  view.map.add(projectLayer);
-          `,
-          before: function () {
-            view.map.presentation.slides.getItemAt(2).applyTo(view);
-          },
-
-          run: function () {
-            view.map.presentation.slides.getItemAt(3).applyTo(view);
-          }
-        },
+  //       {
+  //
+  //         title: "Add project layer",
+  //
+  //         code: `
+  // const projectLayer = new SceneLayer({
+  //   url: "https://.../ProjectBuilding/SceneServer"
+  // });
+  // view.map.add(projectLayer);
+  //         `,
+  //         before: function () {
+  //           view.map.presentation.slides.getItemAt(2).applyTo(view);
+  //         },
+  //
+  //         run: function () {
+  //           view.map.presentation.slides.getItemAt(3).applyTo(view);
+  //         }
+  //       },
 
         /////////////////////////////////////////////////////////////////////////////////
         //
