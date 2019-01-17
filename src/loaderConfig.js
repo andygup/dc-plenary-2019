@@ -1,7 +1,7 @@
 const href = location.href;
 var app =  href.substring(href.lastIndexOf('/'), href.indexOf(".html"));
 var path = href.substring(0, href.lastIndexOf('/') + 1);
-var api = "https://js.arcgis.com/4.9/";
+var api = "https://js.arcgis.com/4.10/";
 
 var loaderConfig = {
   paths: {
