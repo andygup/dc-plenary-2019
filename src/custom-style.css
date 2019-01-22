@@ -27,6 +27,18 @@ body,
   width: 100%;
 }
 
+.esri-text-overlay-item esri-text-overlay-item-anchor-bottom {
+  font-size: 18px !important;
+}
+
+.esri-text-overlay-item esri-text-overlay-item-anchor-left {
+  font-size: 18px !important;
+}
+
+.esri-text-overlay-item esri-text-overlay-item-anchor-top {
+  font-size: 18px !important;
+}
+
 .editor {
   height: 400px;
   margin-bottom: 10px;
