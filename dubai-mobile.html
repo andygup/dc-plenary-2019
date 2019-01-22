@@ -72,20 +72,26 @@
         }
     </style>
 
-    <link rel="stylesheet" href="https://js.arcgis.com/4.9/esri/css/main.css">
-    <script src="https://js.arcgis.com/4.9/"></script>
+    <link rel="stylesheet" href="https://js.arcgis.com/4.10/esri/css/main.css">
+    <script src="https://js.arcgis.com/4.10/"></script>
 
     <script>
         require([
             "esri/views/SceneView",
             "esri/WebScene",
             "esri/webscene/Slide",
-
+            "esri/core/urlUtils",
             // Array shim for IE11
             "@dojo/framework/shim/array"
         ], function (
-            SceneView, WebScene, Slide, Array
+            SceneView, WebScene, Slide, urlUtils, Array
         ) {
+
+            // Proxy the route requests to avoid prompt for log in
+            urlUtils.addProxyRule({
+                urlPrefix: "www.arcgis.com",
+                proxyUrl: "/resource-proxy-latest/PHP/proxy.php"
+            });
 
             var scene = new WebScene({
                 portalItem: { // autocasts as new PortalItem()
@@ -140,6 +146,18 @@
             }
 
             view.when(function () {
+
+              view.goTo({
+                "position": {
+                  "spatialReference": {
+                    "latestWkid": 3857,
+                    "wkid": 102100
+                  },
+                  "x":6150052.438877768,"y":2898076.017758344,"z":470.1571760857478
+                },
+                'tilt': 81.76971540564205, 'heading': 56.11800491361131
+              });
+
                 document.getElementById("slidesDiv").style.visibility = "visible";
 
                 var slides = scene.presentation.slides;
