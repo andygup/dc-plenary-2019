@@ -1,12 +1,16 @@
 define([
     "esri/WebScene",
     "esri/views/SceneView",
-    "esri/core/watchUtils"
+    "esri/core/watchUtils",
+    "esri/config",
+    "esri/core/urlUtils"
   ],
   function (
     WebScene,
     SceneView,
-    watchUtils
+    watchUtils,
+    esriConfig,
+    urlUtils
   ) {
     let webscene, view, buildingsLayer, projectLayer;
 
@@ -16,6 +20,14 @@ define([
       title: "Dubai Redevelopment",
 
       setup: function () {
+
+        // esriConfig.request.proxyUrl = "/resource-proxy-latest/PHP/proxy.php";
+
+        // Proxy the route requests to avoid prompt for log in
+        urlUtils.addProxyRule({
+          urlPrefix: "www.arcgis.com",
+          proxyUrl: "/resource-proxy-latest/PHP/proxy.php"
+        });
 
         webscene = new WebScene({
           portalItem: {
@@ -43,9 +55,20 @@ define([
 
         view.when(function () {
 
+          view.goTo({
+            "position": {
+              "spatialReference": {
+                "latestWkid": 3857,
+                "wkid": 102100
+              },
+              "x":6150052.438877768,"y":2898076.017758344,"z":470.1571760857478
+            },
+            'tilt': 81.76971540564205, 'heading': 56.11800491361131
+          });
+
             watchUtils.watch(view, "interacting", function(r) {
               const c = view.camera.clone();
-              console.log('camera', "position: " + JSON.stringify(c.position) + ", tile: " + c.tilt);
+              console.log('camera', "position: " + JSON.stringify(c.position) + ", 'tilt:' " + c.tilt + ", 'heading:' " + c.heading );
             });
 
           projectLayer = webscene.layers.filter(function (layer) {
@@ -173,6 +196,17 @@ define([
           `,
           before: function () {
             view.map.presentation.slides.getItemAt(4).applyTo(view);
+            view.goTo({
+              "position": {
+                "spatialReference": {
+                  "latestWkid": 3857,
+                  "wkid": 102100
+                },
+                "x":6153592.044898389,"y":2904552.4062726134,"z":91.21633680537343
+              },
+              "heading": 35.76854420508165,
+              "tilt": 67.98540272393139
+            })
           },
 
           run: function () {
