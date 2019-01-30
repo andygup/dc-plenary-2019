@@ -88,10 +88,10 @@
         ) {
 
             // Proxy the route requests to avoid prompt for log in
-            urlUtils.addProxyRule({
-                urlPrefix: "www.arcgis.com",
-                proxyUrl: "/resource-proxy-latest/PHP/proxy.php"
-            });
+            // urlUtils.addProxyRule({
+            //     urlPrefix: "www.arcgis.com",
+            //     proxyUrl: "/resource-proxy-latest/PHP/proxy.php"
+            // });
 
             var scene = new WebScene({
                 portalItem: { // autocasts as new PortalItem()
