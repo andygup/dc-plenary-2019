@@ -4,7 +4,7 @@ body,
   position: absolute;
   width: 100%;
   height: 100%;
-  font-size: 16px;
+  font-size: 12px;
 }
 
 .esri-legend {
@@ -65,7 +65,7 @@ body,
 
 .accordion-title {
   padding: 0.5em;
-  font-size: 1.4em;
+  font-size: 1em;
 }
 
 #slider-container {
